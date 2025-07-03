@@ -32,3 +32,7 @@ python .\Utils\dataUtils.py
 #运行项目
 python manage.py runserver
 ```
+
+![车辆信息截图](https://github.com/shiyuan-0629/Used-car-sales/blob/master/images/car.png?raw=true)
+![个人收藏截图](https://github.com/shiyuan-0629/Used-car-sales/blob/master/images/favorites.png?raw=true)
+![登录信息截图](https://github.com/shiyuan-0629/Used-car-sales/blob/master/images/logininfo.png?raw=true)
