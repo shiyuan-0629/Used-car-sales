@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 import mysql.connector
 import random
 from datetime import datetime
-from Utils.password import generate_md5
+from password import generate_md5
 
 
 def createDataCar():
@@ -18,7 +18,7 @@ def createDataCar():
     )
 
     mycursor = mydb.cursor()
-    lines = open("data.txt","r",encoding="utf-8").readlines()
+    lines = open("./Utils/data.txt","r",encoding="utf-8").readlines()
     for line in lines:
         lis = line.split(",")
         insert = "insert into car_carmodel(picture,name,price) values(%s,%s,%s)"
@@ -27,7 +27,26 @@ def createDataCar():
     mydb.commit()
 
 
-createDataCar()
+# createDataCar()
+
+
+
+def createDataUser():
+    mydb = mysql.connector.connect(
+        host=databases.get("HOST"),
+        port=databases.get("PORT"),
+        user=databases.get("USER"),
+        password=databases.get("PASSWORD"),
+        database=databases.get("DATABASES"),
+    )
+    mycursor = mydb.cursor()
+    insert = "insert into user_usermodel(name,password,created_at,balance) values(%s,%s,%s,%s)"
+    for index in range(1, 11):
+        tupe = (f"xiaopan{index}", generate_md5("123456"), datetime.today(), 0.00)
+        mycursor.execute(insert, tupe)
+    mydb.commit()
+
+createDataUser()
 
 def createDataFavoritees():
     mydb = mysql.connector.connect(
@@ -46,23 +65,10 @@ def createDataFavoritees():
         mycursor.execute(insert, tup)
     mydb.commit()
 
-def createDataUser():
-    mydb = mysql.connector.connect(
-        host=databases.get("HOST"),
-        port=databases.get("PORT"),
-        user=databases.get("USER"),
-        password=databases.get("PASSWORD"),
-        database=databases.get("DATABASES"),
-    )
-    mycursor = mydb.cursor()
-    insert = "insert into user_usermodel(name,password,created_at,balance) values(%s,%s,%s,%s)"
-    for index in range(1, 11):
-        tupe = (f"xiaopan{index}", generate_md5("123456"), datetime.today(), 0.00)
-        mycursor.execute(insert, tupe)
-    mydb.commit()
+createDataFavoritees()
 
 def get_proxy():
-    data = open(r"proxies.text").readlines()
+    data = open(r"proxies.txt").readlines()
     data_list = []
     for da in data:
         da = da.replace('\n', '')
