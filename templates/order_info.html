@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <title>订单情况</title>
+    <style>
+        :root {
+            --primary-color: #2196F3;
+            --secondary-color: #f44336;
+            --background-color: #f5f5f5;
+            --card-background: #ffffff;
+            --text-color: #333333;
+            --light-text-color: #666666;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--background-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .card {
+            background-color: var(--card-background);
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 32px;
+            width: 100%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            font-size: 28px;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .order-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+        }
+
+        .order-table th,
+        .order-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .order-table th {
+            background-color: #f9f9f9;
+            color: var(--light-text-color);
+        }
+
+        .status-pending {
+            color: #f39c12;
+        }
+
+        .status-shipped {
+            color: #27ae60;
+        }
+        
+        .add-review-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .add-review-btn:hover {
+            opacity: 0.9;
+        }
+
+        .drawer {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 300px;
+            height: 100%;
+            background-color: white;
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+            transition: right 0.3s ease;
+        }
+
+        .open {
+            right: 0;
+        }
+
+        .drawer-content {
+            padding: 20px;
+        }
+
+        .drawer-content textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        .drawer-content button[type="submit"] {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .drawer-content button[type="submit"]:hover {
+            opacity: 0.9;
+        }
+
+    </style>
+
+</head>
+
+<body>
+    <div class="card">
+        <h1>订单情况</h1>
+        <table class="order-table">
+            <thead>
+                <tr>
+                    <th>订单商品</th>
+                    <th>订单日期</th>
+                    <th>订单类型</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for order in orders %}
+            	 <tr>
+                    <td>{{ order.car_name }}</td>
+                    <td>{{ order.orderDate }}</td>
+                     {% if order.type == 'RS' %}
+                     	<td class="status-pending">预定</td>
+                     {% endif %}
+                     {% if order.type == 'FP' %}
+                     	<td class="status-shipped">全款</td>
+                     {% endif %}
+                    <td><button class="add-review-btn" onclick="openDrawer({{ order.car_id }})">添加评价</button></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="drawer" id="reviewDrawer">
+        <div class="drawer-content">
+            <button onclick="closeDrawer()" style="float: right;">关闭</button>
+            <h2>添加评价</h2>
+            <!-- 新增表单 -->
+            <form id="reviewForm" method="post" action="{% url 'message:add' %}" target="_parent">
+                {% csrf_token %}
+                <input type="hidden" id="carId" name="id" value="1">
+                <label for="reviewContent">评价内容:</label>
+                <textarea id="reviewContent" name="reviewContent" rows="4" placeholder="请输入评价内容"></textarea>
+                <button type="submit">提交评价</button>
+            </form>
+        </div>
+    </div>
+    <script>
+        function openDrawer(id) {
+            const drawer = document.getElementById('reviewDrawer');
+            document.getElementById("carId").value = id;
+            drawer.classList.add('open');
+
+        }
+
+        function closeDrawer() {
+            const drawer = document.getElementById('reviewDrawer');
+            drawer.classList.remove('open');
+        }
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>汽车详情页</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f9;
+        }
+
+        .car-detail {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .car-image {
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .price {
+            color: #e74c3c;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .button-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .button-container a {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            text-align: center;
+            text-decoration: none; /* 移除下划线 */
+            display: inline-block; /* 支持内边距和宽高 */
+        }
+
+        .buy-now {
+            background-color: #27ae60;
+            color: #fff;
+        }
+
+        .reserve-now {
+            background-color: #3498db;
+            color: #fff;
+        }
+
+        .favorite {
+            background-color: #e67e22;
+            color: #fff;
+        }
+        
+        .comment-section {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .comment {
+            border-bottom: 1px solid #eee;
+            padding: 10px 0;
+        }
+
+        .comment:last-child {
+            border-bottom: none;
+        }
+
+        .comment-author {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .comment-content {
+            color: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+    <div class="car-detail">
+        <img class="car-image" src="{{ car.picture }}" alt="汽车图片">
+        <h1>{{ car.name }}</h1>
+        <p class="price">{{ car.price }} 万元</p>
+        <div class="button-container">
+            <a class="buy-now" href="{% url 'order:buy' car.id %}">全款购买</a>
+            <a class="reserve-now" href="{% url 'order:reserve' car.id %}">立即预定</a>
+            {% if tip == "取消收藏" %}
+            	<a class="favorite" href="{% url 'favorites:remove' car.id %}">{{ tip }}</a>
+            {% endif %} 
+            {% if tip == "收藏" %}
+                <a class="favorite" href="{% url 'favorites:add' car.id %}">{{ tip }}</a>
+            {% endif %} 
+            
+        </div>
+    </div>
+
+    <div class="comment-section">
+        <h2>评论区</h2>
+    
+        {% for key, value in message.items %}
+            <div class="comment">
+                <div class="comment-author">{{ key }}</div>
+                {% for msg in value %}
+                	<div class="comment-content">{{ msg }}</div><br>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+
+</body>
+</html>
+
+

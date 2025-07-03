@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>汽车销售界面</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            /* 调整 padding-top 为固定头部留出空间 */
+            padding: 80px 20px 20px;
+        }
+
+        /* 固定头部容器 */
+        .fixed-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            z-index: 100;
+        }
+
+        h1 {
+            color: #333;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            margin: 0;
+            font-size: 24px;
+        }
+
+        /* 汽车列表容器 */
+        .car-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin-left: 80px;
+        }
+
+        /* 将 a 标签设置为弹性项，让其正确参与 flex 布局 */
+        .car-link {
+            text-decoration: none;
+            color: inherit;
+            display: flex; /* 关键修改 */
+            width: calc(50% - 10px); /* 保持和 car-container 一样的宽度 */
+            box-sizing: border-box;
+        }
+
+        .car-container {
+            background-color: #fff;
+            border: none;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            max-width: 600px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            flex-grow: 1; /* 让 car-container 填充 car-link 的空间 */
+        }
+
+        .car-container:hover {
+            transform: translateY(-5px);
+        }
+
+        .car-image {
+            width: 55%;
+            height: 250px;
+            background-color: #e0e0e0;
+            border-radius: 8px;
+            margin: 0 auto 20px;
+            overflow: hidden;
+        }
+
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #7f8c8d;
+            margin: 8px 0;
+        }
+
+        #personal-info-link {
+            width: auto;
+            margin: 0;
+            padding: 12px 20px;
+            background-color: #3498db;
+            color: #fff;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        #personal-info-link:hover {
+            background-color: #2980b9;
+        }
+
+        /* 搜索框容器样式 */
+        .search-container {
+            display: flex;
+        }
+
+        /* 搜索输入框样式 */
+        #search-input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px 0 0 5px;
+            font-size: 16px;
+        }
+
+        /* 搜索按钮样式 */
+        #search-button {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #search-button:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <!-- 固定头部容器 -->
+    <div class="fixed-header">
+        <h1>欢迎来到汽车销售平台</h1>
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="搜索汽车...">
+            <button id="search-button" onclick="search()">搜索</button>
+        </div>
+        <a id="personal-info-link" href="{% url 'user:info' %}">查看个人信息</a>
+    </div>
+
+    <!-- 汽车列表容器 -->
+    <div class="car-list">
+        <!-- 第一辆车 -->
+        {% for car in cars %}
+        	<a class="car-link" href="{% url 'car:buy' car.id %}">
+            <div class="car-container">
+                <div class="car-image">
+                    <img style="height: 250px" src="{{ car.picture }}" alt="">
+                </div>
+                <h2>{{ car.name }}</h2>
+                <p>价格: {{ car.price }} 万元</p>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    <script>
+        function search(){
+            let searchInput = document.getElementById("search-input");
+            if(searchInput.value !== ""){
+                let url = "{% url 'car:cars' %}?search=" + searchInput.value
+                window.open(url, '_parent');
+            }
+        }
+    </script>
+</body>
+</html>

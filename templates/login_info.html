@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <title>登录情况</title>
+    <style>
+        :root {
+            --primary-color: #2196F3;
+            --secondary-color: #f44336;
+            --background-color: #f5f5f5;
+            --card-background: #ffffff;
+            --text-color: #333333;
+            --light-text-color: #666666;
+        }
+
+        /* 确保 html 和 body 都占满视口且无滚动 */
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--background-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card {
+            background-color: var(--card-background);
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 32px;
+            width: 100%;
+            max-width: 800px;
+            /* 设置最大高度，内容超出时显示滚动条 */
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            font-size: 28px;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .login-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+        }
+
+        .login-table th,
+        .login-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .login-table th {
+            background-color: #f9f9f9;
+            color: var(--light-text-color);
+        }
+
+        .success {
+            color: #27ae60;
+        }
+
+        .fail {
+            color: #e74c3c;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <h1>登录情况</h1>
+        <table class="login-table">
+            <thead>
+                <tr>
+                    <th>登录时间</th>
+                    <th>登录状态</th>
+                    <th>登录类型</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for login in loginList %}
+            	<tr>
+                    <td>{{ login.lastDate }}</td>
+                    <td class="{{ login.state }}">{{ login.state|upper }}</td>
+                    <td>{{ login.type }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>

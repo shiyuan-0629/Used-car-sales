@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <title>账户信息</title>
+    <style>
+        :root {
+            --primary-color: #2196F3;
+            --secondary-color: #f44336;
+            --background-color: #f5f5f5;
+            --card-background: #ffffff;
+            --text-color: #333333;
+            --light-text-color: #666666;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--background-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .account-card {
+            background-color: var(--card-background);
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 32px;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            font-size: 28px;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .info-list {
+            list-style-type: none;
+            padding: 0;
+            margin-bottom: 24px;
+        }
+
+        .info-list li {
+            font-size: 16px;
+            color: var(--text-color);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+        }
+
+        .info-list li strong {
+            color: var(--light-text-color);
+            width: 120px;
+            margin-right: 16px;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        #logoutBtn {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        #changePasswordBtn {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        button:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        dialog {
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 32px;
+        }
+
+        dialog::backdrop {
+            background-color: rgba(0, 0, 0, 0.3);
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        input[type="password"] {
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+
+        .dialog-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 16px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="account-card">
+        <h1>账户信息</h1>
+        <ul class="info-list">
+            <li><strong>用户名:</strong> {{ user.name }}</li>
+            <li><strong>注册时间:</strong> {{ user.created_at }}</li>
+            <li><strong>金额:</strong> {{ user.balance }}</li>
+        </ul>
+        <div class="button-container">
+            <button id="logoutBtn" onclick="logout()">退出登录</button>
+            <button id="changePasswordBtn">修改密码</button>
+        </div>
+    </div>
+
+    <dialog id="changePasswordDialog">
+        <form action="{% url 'system:updatepwd' %}" method="post" target="_parent">
+            {% csrf_token %}
+            <label for="newPassword">新密码:</label>
+            <input type="password" id="newPassword" name="newPassword" required>
+            <div class="dialog-buttons">
+                <button type="button" id="cancelBtn">取消</button>
+                <button type="submit">确认修改</button>
+            </div>
+        </form>
+    </dialog>
+
+    <script>
+        
+        function logout(){
+            window.open("{% url 'system:logout' %}","_parent")
+        }
+        
+        const changePasswordBtn = document.getElementById('changePasswordBtn');
+        const changePasswordDialog = document.getElementById('changePasswordDialog');
+        const cancelBtn = document.getElementById('cancelBtn');
+
+        changePasswordBtn.addEventListener('click', () => {
+            changePasswordDialog.showModal();
+        });
+
+        cancelBtn.addEventListener('click', () => {
+            changePasswordDialog.close();
+        });
+        
+    </script>
+</body>
+
+</html>
