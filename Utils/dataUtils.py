@@ -27,7 +27,7 @@ def createDataCar():
     mydb.commit()
 
 
-# createDataCar()
+createDataCar()
 
 
 
